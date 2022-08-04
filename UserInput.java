@@ -5,8 +5,8 @@ import java.util.*;
 import static numbers.Number.Properties.*;
 
 public class UserInput {
-    private static Scanner scan = new Scanner(System.in);
-    private final String requestMessage = "Enter a request: ";
+    private Scanner scan;
+    private final static String requestMessage = "Enter a request: ";
     private String[] values;
     private int size;
     private Long number;
@@ -15,6 +15,10 @@ public class UserInput {
     private Set<Number.Properties> exclusiveProperties;
     private List<String> wrongProperties;
     private List<String> muatualExclusiveProperties;
+
+    UserInput() {
+        this.scan = new Scanner(System.in);
+    }
 
     public int getSize() {
         return size;
@@ -122,16 +126,15 @@ public class UserInput {
                 value = values[i];
             }
 
-            // check if the entered property is a valid property. If not, the value ist stored in the wrong collection, to be processed by the error message.
+            // check if the entered property is a valid property. If not, the value ist stored in the wrongProperties collection.
             // otherwise the value is stored in the corresponding collection (inclusive or exclusive)
-            try {
-                property = valueOf(value);
+            if (exists(value)) {
                     if (exclusive) {
-                        exclusiveProperties.add(property);
+                        exclusiveProperties.add(valueOf(value));
                     } else {
-                        inclusiveProperties.add(property);
+                        inclusiveProperties.add(valueOf(value));
                     }
-                } catch (IllegalArgumentException e) {
+                } else {
                     wrongProperties.add(value);
             }
         }
@@ -147,7 +150,7 @@ public class UserInput {
     }
 
     /**
-     * searches for mutual exlusive properties in the collections. If a properties are mutual exclusive, they are stored in the collection muatualExclusiveProperties.
+     * searches for mutual exlusive properties in the collections. If properties are mutual exclusive, they are stored in the collection muatualExclusiveProperties.
      */
     private void findMutalExclusive() {
         for (Number.Properties property : inclusiveProperties) {
@@ -165,5 +168,9 @@ public class UserInput {
                 muatualExclusiveProperties.add("-" + property.toString());
             }
         }
+    }
+
+    void close() {
+        scan.close();
     }
 }

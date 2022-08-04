@@ -6,12 +6,15 @@ import java.util.Set;
 import static numbers.Number.Properties.*;
 
 public class Number {
-    final Set<Properties> properties; // this collection is filled with the properties of the current number, defined in the enum Properties.
+    private final Set<Properties> properties; // this collection is filled with the properties of the current number, which are defined in the enum Properties.
     final long VALUE;
 
     Number(long i) {
         this.VALUE = i;
         this.properties = new HashSet<>();
+    }
+
+    Number setProperties() {
         isBuzz();
         isDuck();
         isPalindromic();
@@ -22,6 +25,11 @@ public class Number {
         isEven();
         isJumping();
         isHappy();
+        return this;
+    }
+
+    Set<Properties> getProperties() {
+        return properties;
     }
 
     private void isEven() {
@@ -166,5 +174,13 @@ public class Number {
             this.mutualExclusive = mutualExclusive;
         }
 
+        static boolean exists(String property) {
+            for (Properties value : Properties.values()) {
+                if (value.name.equalsIgnoreCase(property)) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }
